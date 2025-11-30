@@ -9,8 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo and Set up Node
+      - name: Checkout Repo
         uses: actions/checkout@v5
+
+      - name: Install Node
         uses: actions/setup-node@v6
         with:
           node-version: 20
@@ -22,7 +24,7 @@ jobs:
       - name: Backend Lint
         working-directory: server
         run: npm run lint
-    
+
       - name: Install frontend dependencies
         working-directory: client
         run: npm ci
@@ -30,10 +32,9 @@ jobs:
       - name: Frontend Lint
         working-directory: client
         run: npm run lint
-      
+
       - name: Build Backend Image
         run: docker build -t backend ./server
 
-          
       - name: Build FrontEnd Image
         run: docker build -t client ./client
