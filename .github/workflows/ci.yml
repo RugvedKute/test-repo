@@ -1,0 +1,39 @@
+name: build-and-lint
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo and Set up Node
+        uses: actions/checkout@v5
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Install backend dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Backend Lint
+        working-directory: server
+        run: npm run lint
+    
+      - name: Install frontend dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Frontend Lint
+        working-directory: client
+        run: npm run lint
+      
+      - name: Build Backend Image
+        run: docker build -t backend ./server
+
+          
+      - name: Build FrontEnd Image
+        run: docker build -t client ./client
